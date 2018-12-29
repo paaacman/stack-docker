@@ -59,3 +59,18 @@ metricbeat.modules:
   # Configure the metric types that are included by these metricsets.
   cpu.metrics:  ["percentages"]  # The other available options are normalized_percentages and ticks.
   core.metrics: ["percentages"]  # The other available option is ticks.
+
+- module: rabbitmq
+  metricsets: ["node", "queue", "connection"]
+  enabled: true
+  period: 10s
+  hosts: ["localhost:15672"]
+
+- module: nginx
+  metricsets: ["stubstatus"]
+  enabled: true
+  period: 10s
+  # Nginx hosts
+  hosts: ["http://host.docker.internal"]
+  # Path to server status. Default server-status
+  server_status_path: "nginx_status"

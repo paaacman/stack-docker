@@ -195,6 +195,8 @@ services:
       timeout: 15s
       retries: 5
     user: root
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
 
   packetbeat:
     image: docker.elastic.co/beats/packetbeat:${TAG}
