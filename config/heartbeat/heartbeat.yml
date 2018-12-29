@@ -7,6 +7,11 @@ heartbeat.monitors:
   ssl:
     certificate_authorities: ["/usr/share/heartbeat/certs/ca/ca.crt"]
 
+- type: http
+  schedule: '@every 60s'
+  urls:
+    - https://gitlab.com
+
 - type: icmp
   schedule: '@every 5s'
   hosts:
