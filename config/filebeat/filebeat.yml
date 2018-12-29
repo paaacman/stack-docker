@@ -1,10 +1,13 @@
-filebeat.config:
-  prospectors:
-    path: ${path.config}/prospectors.d/*.yml
-    reload.enabled: false
-  modules:
-    path: ${path.config}/modules.d/*.yml
-    reload.enabled: false
+
+filebeat.inputs:
+  - type: log
+    paths:
+      - /mnt/log/*.log
+  - type: docker
+    containers:
+      ids: '*'
+      path: /usr/share/filebeat/dockerlogs
+      stream: stderr
 
 processors:
 - add_cloud_metadata:
@@ -26,3 +29,6 @@ setup.kibana:
   ssl.certificate_authorities: ["/usr/share/filebeat/certs/ca/ca.crt"]
 
 xpack.monitoring.enabled: true
+
+filebeat.modules:
+- module: system

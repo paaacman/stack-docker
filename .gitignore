@@ -10,6 +10,8 @@ config/kibana/kibana.keystore
 config/logstash/logstash.crt
 config/logstash/logstash.key
 config/logstash/logstash.keystore
+config/metricbeat/metricbeat.crt
+config/metricbeat/metricbeat.key
 config/ssl/ca/ca.crt
 config/ssl/ca/ca.key
 config/ssl/docker-cluster-ca.zip

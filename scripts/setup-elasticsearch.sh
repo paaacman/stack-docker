@@ -60,5 +60,10 @@ if [[ -d /usr/share/elasticsearch/bin/x-pack ]]; then
         mv /config/ssl/docker-cluster/kibana/* /config/kibana/
         echo "Move elasticsearch certs to elasticsearch config dir..."
         mv /config/ssl/docker-cluster/elasticsearch/* /config/elasticsearch/
+        echo "Move metricbeat certs to metricbeat config dir..."
+        mv /config/ssl/docker-cluster/metricbeat/* /config/metricbeat/
+
+        echo "Enable ingest-geoip plugin..."
+        /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-geoip
     fi
 fi

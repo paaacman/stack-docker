@@ -113,9 +113,6 @@ services:
     image: docker.elastic.co/beats/filebeat:${TAG}
     container_name: filebeat
     command: --strict.perms=false -e  # -e flag to log to stderr and disable syslog/file output
-    # If the host system has logs at "/var/log", mount them at "/mnt/log"
-    # inside the container, where Filebeat can find them.
-    # volumes: ['/var/log:/mnt/log:ro']
     secrets:
       - source: filebeat.yml
         target: /usr/share/filebeat/filebeat.yml
@@ -123,8 +120,13 @@ services:
         target: /usr/share/filebeat/filebeat.keystore
       - source: ca.crt
         target: /usr/share/filebeat/certs/ca/ca.crt
+    # If the host system has logs at "/var/log", mount them at "/mnt/log"
+    # inside the container, where Filebeat can find them.
+    # volumes: ['/var/log:/mnt/log:ro']
     volumes:
       - './scripts/setup-beat.sh:/usr/local/bin/setup-beat.sh:ro'
+      - '/var/log:/mnt/log:ro'
+      - "/var/lib/docker/containers:/usr/share/filebeat/dockerlogs:ro"
     networks: ['stack']
     depends_on: ['elasticsearch', 'kibana']
     healthcheck:
@@ -132,6 +134,7 @@ services:
       interval: 30s
       timeout: 15s
       retries: 5
+    user: root
 
   heartbeat:
     image: docker.elastic.co/beats/heartbeat:${TAG}
@@ -173,8 +176,16 @@ services:
         target: /usr/share/metricbeat/metricbeat.keystore
       - source: ca.crt
         target: /usr/share/metricbeat/certs/ca/ca.crt
+      - source: metricbeat.key
+        target: /usr/share/metricbeat/config/certs/metricbeat/metricbeat.key
+      - source: metricbeat.crt
+        target: /usr/share/metricbeat/config/certs/metricbeat/metricbeat.crt
     volumes:
       - './scripts/setup-beat.sh:/usr/local/bin/setup-beat.sh:ro'
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      #- /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks: ['stack']
     depends_on: ['elasticsearch', 'kibana']
     healthcheck:
@@ -286,6 +297,10 @@ secrets:
     file: ./config/metricbeat/metricbeat.yml
   metricbeat.keystore:
     file: ./config/metricbeat/metricbeat.keystore
+  metricbeat.key:
+    file: ./config/metricbeat/metricbeat.key
+  metricbeat.crt:
+    file: ./config/metricbeat/metricbeat.crt
   packetbeat.yml:
     file: ./config/packetbeat/packetbeat.yml
   packetbeat.keystore:
