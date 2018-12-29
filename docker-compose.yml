@@ -130,7 +130,7 @@ services:
     networks: ['stack']
     depends_on: ['elasticsearch', 'kibana']
     healthcheck:
-      test: filebeat test config
+      test: filebeat test config --strict.perms=false
       interval: 30s
       timeout: 15s
       retries: 5
@@ -152,7 +152,7 @@ services:
     networks: ['stack']
     depends_on: ['elasticsearch', 'kibana']
     healthcheck:
-      test: heartbeat test config
+      test: heartbeat test config --strict.perms=false
       interval: 30s
       timeout: 15s
       retries: 5
@@ -190,7 +190,7 @@ services:
     networks: ['stack']
     depends_on: ['elasticsearch', 'kibana']
     healthcheck:
-      test: metricbeat test config
+      test: metricbeat test config --strict.perms=false
       interval: 30s
       timeout: 15s
       retries: 5
@@ -210,8 +210,6 @@ services:
     # that the other containers are connected to, and thus can't resolve the
     # hostname "elasticsearch". Instead, we'll tell it to find Elasticsearch
     # on "localhost", which is the Docker host machine in this context.
-    command: -e -E 'output.elasticsearch.hosts=["localhost:9200"]'
-    depends_on: ['elasticsearch']
     command: --strict.perms=false -e -E output.elasticsearch.hosts="https://localhost:9200" # -e flag to log to stderr and disable syslog/file output
     secrets:
       - source: packetbeat.yml
@@ -224,7 +222,7 @@ services:
       - './scripts/setup-beat.sh:/usr/local/bin/setup-beat.sh:ro'
     depends_on: ['elasticsearch', 'kibana']
     healthcheck:
-      test: packetbeat test config
+      test: packetbeat test config --strict.perms=false
       interval: 30s
       timeout: 15s
       retries: 5

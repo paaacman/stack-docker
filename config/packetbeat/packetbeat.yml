@@ -4,6 +4,9 @@ packetbeat.flows:
   timeout: 30s
   period: 10s
 
+packetbeat.protocols.dhcpv4:
+  ports: [67, 68]
+
 packetbeat.protocols.dns:
   ports: [53]
   include_authorities: true
@@ -11,6 +14,9 @@ packetbeat.protocols.dns:
 
 packetbeat.protocols.http:
   ports: [80, 5601, 9200, 8080, 8081, 5000, 8002]
+
+packetbeat.protocols.tls:
+  ports: [443]
 
 packetbeat.protocols.memcache:
   ports: [11211]
@@ -38,7 +44,7 @@ processors:
 - add_cloud_metadata:
 
 output.elasticsearch:
-  hosts: ['elasticsearch:9200']
+  #hosts: ['elasticsearch:9200']
   protocol: "https"
   username: elastic
   # Read PW from packetbeat.keystore
