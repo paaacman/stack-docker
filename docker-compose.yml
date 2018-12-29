@@ -195,8 +195,13 @@ services:
       timeout: 15s
       retries: 5
     user: root
+    environment:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_PORT=${MYSQL_PORT}
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
+    external_links:
+      - merito-docker_db_1:mysql
 
   packetbeat:
     image: docker.elastic.co/beats/packetbeat:${TAG}
@@ -251,7 +256,8 @@ services:
       timeout: 10s
       retries: 5
 
-networks: {stack: {}}
+networks:
+  stack: {}
 # use docker volume to persist ES data outside of a container.
 volumes:
   es_data:
