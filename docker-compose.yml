@@ -168,7 +168,7 @@ services:
     #   - /proc:/hostfs/proc:ro
     #   - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
     #   - /:/hostfs:ro
-    command: --strict.perms=false -e  # -e flag to log to stderr and disable syslog/file output
+    command: --strict.perms=false -system.hostfs=/hostfs -e  # -e flag to log to stderr and disable syslog/file output
     secrets:
       - source: metricbeat.yml
         target: /usr/share/metricbeat/metricbeat.yml
@@ -184,8 +184,9 @@ services:
       - './scripts/setup-beat.sh:/usr/local/bin/setup-beat.sh:ro'
       - /proc:/hostfs/proc:ro
       - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
-      #- /:/hostfs:ro
+      - /:/hostfs:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      #- /sys/fs/cgroup:/hostfs/sys/fs/cgroup,ro
     networks: ['stack']
     depends_on: ['elasticsearch', 'kibana']
     healthcheck:
