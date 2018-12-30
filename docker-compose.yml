@@ -199,7 +199,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_PORT=${MYSQL_PORT}
     extra_hosts:
-      - "host.docker.internal:172.17.0.1"
+      - "host.docker.internal:${DOCKER_HOST_INTERNAL_IP}"
     external_links:
       - merito-docker_db_1:mysql
 
